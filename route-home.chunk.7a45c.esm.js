@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{BKwF:function(){},FDtd:function(t,e,a){"use strict";a.r(e),function(t){var n=a("hosL"),c=a("QRet"),s=a("KpmI"),l=a("lHvK");a("BKwF");e.default=()=>{const e=Object(c.a)(s.a);return Object(n.h)(t,null,Object(n.h)("main",null,e.all.map(((t,e)=>Object(n.h)("a",{class:"thumbnail",href:`/edit/${e}`,key:e},Object(n.h)(l.a,{editing:e}),Object(n.h)("div",{class:"overlay"},Object(n.h)("span",{class:"name"},t.text)))))))}}.call(this,a("hosL").Fragment)}}]);
+//# sourceMappingURL=route-home.chunk.7a45c.esm.js.map
