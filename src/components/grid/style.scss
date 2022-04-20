@@ -1,0 +1,46 @@
+@use "scss/_variables.scss"as *;
+@use "scss/_mixins.scss"as *;
+@use "sass:color";
+@use "sass:list";
+
+div.wrapper {
+	margin: auto;
+}
+
+svg.tree {
+	@each $color in $colors {
+		.color-#{list.index($colors, $color)} {
+			fill: $color;
+			stroke: color.change($color, $alpha: 0.4);
+			stop-color: color.change($color, $alpha: 0.6);
+			stroke-width: 12px;
+		}
+	}
+
+	.heading {
+		fill: $primary;
+		stop-color: color.change($primary, $alpha: 0.6);
+	}
+
+	foreignObject>textarea {
+		all: unset;
+		@include square(100%);
+		font-weight: 600;
+		font-family: inherit;
+		display: inline;
+		color: #FFF;
+	}
+
+	:not(.thumbnail) & {
+		overflow: visible;
+	}
+
+	.material-icons-round {
+		cursor: pointer;
+		user-select: text;
+	}
+
+	[role="button"] {
+		cursor: pointer;
+	}
+}

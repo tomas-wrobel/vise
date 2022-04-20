@@ -1,0 +1,39 @@
+@use "scss/_mixins.scss"as *;
+
+main {
+	padding: 10%;
+	display: grid;
+	align-items: center;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+	>a.thumbnail {
+		display: grid;
+		border-radius: 10px;
+		text-decoration: none;
+
+		>* {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		div.overlay {
+			@include square(100%);
+			background: rgba(0, 0, 0, 0.25);
+			display: flex;
+			border-radius: 10px;
+
+			span.name {
+				background: inherit;
+				border-radius: 4px;
+				padding: 4px;
+				margin: auto;
+				color: white;
+			}
+		}
+
+		.wrapper,
+		.tree {
+			@include square(100% !important);
+		}
+	}
+}

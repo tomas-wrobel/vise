@@ -1,0 +1,25 @@
+@use "sass:string";
+
+@mixin square($a) {
+	width: $a;
+	height: $a;
+}
+
+// Currently not using, since data URI gradients are supported in Firefox only
+@function svg-gradient($type, $transform, $colors...) {
+	$stops: "";
+	@each $color, $offset in $colors {
+		$stops: $stops + "<stop offset='#{$offset}' stop-color='#{$color}' />";
+	}
+	@return url(
+		"data:image/svg+xml;utf8,\
+		<svg xmlns='http://www.w3.org/2000/svg'> \
+			<#{$type}Gradient id='grad' style='gradient-transform: #{$transform};'> \
+				#{$stops} \
+			</#{$type}Gradient> \
+		</svg>"
+		+ "#grad"
+	);
+}
+
+// @debug svg-gradient(linear, rotate(90deg), black 0%, grey 50%, white 100%);

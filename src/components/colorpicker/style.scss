@@ -1,0 +1,77 @@
+@use "scss/_variables.scss"as *;
+@use "scss/_mixins.scss"as *;
+@use "sass:list";
+
+div.color-picker {
+	background: #F2F2F7;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 12px;
+	padding: 10px;
+	width: min-content;
+
+	h4 {
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 19px;
+		color: $primary;
+		margin: 0;
+	}
+
+	h5 {
+		font-style: normal;
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 16px;
+		color: #919191;
+		margin: 0;
+		text-align: right;
+	}
+
+	table {
+		border-spacing: 12px;
+
+		td {
+			@include square(32px);
+			border-radius: 6px;
+
+			@each $color in $colors {
+				&.color-#{list.index($colors, $color)} {
+					background-color: $color;
+				}
+			}
+		}
+	}
+
+	nav {
+		text-align: center;
+
+		button {
+			all: unset;
+			@include square(4px);
+			border-radius: 50%;
+			display: inline-block;
+			margin: 8px 4px;
+			background: $primary;
+		}
+	}
+}
+
+.swipe-view {
+	overflow-x: auto;
+	overflow-y: hidden;
+	scroll-snap-coordinate: 0 0;
+	scroll-snap-points-x: repeat(100%);
+	scroll-snap-type: x mandatory;
+	flex: 1;
+	display: flex;
+	-webkit-overflow-scrolling: touch;
+	width: 100%;
+
+	section {
+		width: 100%;
+		height: 100%;
+		flex: 0 0 100%;
+		scroll-snap-align: start;
+	}
+}

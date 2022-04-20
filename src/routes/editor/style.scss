@@ -1,0 +1,56 @@
+@use "scss/_variables.scss"as *;
+@use "scss/_mixins.scss"as *;
+
+.toolbar {
+	@include square(fit-content);
+	position: fixed;
+	font-size: $toolbar * 0.5;
+	color: #5E4FA2;
+	right: 0;
+
+	button {
+		all: unset;
+		@include square($toolbar);
+		text-align: center;
+	}
+
+	&.vertical {
+		bottom: $toolbar;
+
+		button {
+			background: #F2F2F7;
+			display: block;
+
+			&:first-child {
+				background: none;
+				color: #62BAAC;
+			}
+
+			&:nth-child(2) {
+				border-radius: 10px 10px 0 0;
+			}
+		}
+	}
+
+	&.horizontal {
+		bottom: 0;
+		border-radius: 10px 0 0 10px;
+		background: #F2F2F7;
+
+		button {
+			display: inline;
+		}
+	}
+
+	input {
+		display: none;
+
+		&:not(:checked)+span::after {
+			content: "map";
+		}
+
+		&:checked+span::after {
+			content: "list";
+		}
+	}
+}

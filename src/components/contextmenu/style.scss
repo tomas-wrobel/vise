@@ -1,0 +1,25 @@
+@use "scss/_variables.scss"as *;
+
+ul.context-menu {
+	list-style-type: none;
+	color: $primary;
+	font-size: 16px;
+
+	>li {
+		clear: both;
+
+		>ul {
+			list-style-type: none;
+			display: inline;
+		}
+	}
+
+	.toggle-switch {
+		float: right;
+	}
+
+	background: #F2F2F7;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	box-sizing: border-box;
+	border-radius: 12px 12px 0px 0px;
+}

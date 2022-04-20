@@ -1,0 +1,168 @@
+@use "scss/_variables.scss"as *;
+@use "sass:color";
+@use "sass:list";
+
+h1 {
+	color: $primary;
+	font-weight: 400;
+	font-size: 22px;
+	line-height: 20px;
+	text-align: center;
+	width: 100%;
+
+	input {
+		all: inherit;
+	}
+}
+
+ul.list {
+	border-radius: 10px;
+	padding: 12px;
+	margin-top: 10px !important;
+	font-family: -apple-system, Roboto, system-ui, sans-serif;
+	// phone
+	width: calc(100% - $toolbar - 8px);
+	margin-left: 8px;
+
+	@media (min-width: 640px) {
+		// tablet
+		margin: auto;
+		width: 75%;
+	}
+
+	@media (hover: hover) {
+		// desktop
+		margin: auto;
+		width: 66.67%;
+	}
+
+	li textarea {
+		all: inherit;
+		position: relative;
+	}
+
+	// Title
+	>li {
+		list-style-type: none;
+		font-size: 22px;
+
+		>textarea {
+			font-weight: 600;
+		}
+	}
+
+	li.add {
+		text-align: right;
+
+		>span {
+			cursor: pointer;
+			font-size: 32px;
+			padding: 4px;
+
+			color: white;
+			border-radius: 5px;
+
+			@media (min-width: 640px) and (hover: none) {
+				font-size: 40px;
+			}
+
+			&::after {
+				content: "add_circle";
+				position: absolute;
+				transform: translate(-0.875em, 1.125em);
+				background: inherit;
+				border-radius: 50%;
+				color: inherit;
+				font-size: 0.5em;
+			}
+		}
+
+		&+li {
+			height: 12px;
+		}
+	}
+
+	li.body,
+	li[class^="color-"] {
+		list-style-type: none;
+		font-size: 20px;
+	}
+
+	li.note {
+		list-style-type: disc;
+		font-size: 14px;
+
+		&:first-of-type:before {
+			content: "";
+			width: calc(100% + 40px);
+			position: absolute;
+			background: currentColor;
+			top: calc(-0.5em - 0.5px);
+			left: -40px;
+			height: 1px;
+		}
+	}
+
+	// mobile
+	@media (max-width: 640px) {
+		li:not(.note) {
+			font-size: 17px;
+		}
+
+		li.note {
+			font-size: 13px;
+		}
+	}
+
+	@each $color in $colors {
+		&.color-#{list.index($colors, $color)} {
+			background: color.change($color, $alpha: 0.4);
+			color: $color;
+
+			li.add>span {
+				background: $color;
+
+				&:hover {
+					background: color.adjust($color, $lightness: -10%);
+				}
+			}
+		}
+
+		:not(.list) > li.color-#{list.index($colors, $color)} {
+			color: $color;
+			position: relative;
+			padding: 10px;
+			z-index: 2;
+
+			&:before {
+				content: "";
+				background: #fff;
+				z-index: 0;
+			}
+
+			&:after {
+				content: "";
+				background: color.change($color, $alpha: 0.4);
+				z-index: 1;
+				border: 1px solid $color;
+			}
+
+			&:before,
+			&:after {
+				touch-action: none;
+				pointer-events: none;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				border-radius: 10px;
+				left: 0;
+				top: 0;
+			}
+		}
+	}
+
+	textarea::placeholder {
+		color: inherit;
+		opacity: 60%;
+	}
+}
