@@ -29,8 +29,5 @@
 			"type": "image/png",
 			"purpose": "maskable"
 		}
-	],
-	"file_handlers": {
-		
-	}
+	]
 }
