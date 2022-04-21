@@ -72,7 +72,7 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 	);
 
 	const map = (item: List.Item, index: number, array: List.Item[]) => {
-		const {lines, width} = measure(item.text || "New item...", phone ? 17 : 20);
+		const {lines, width} = measure(item.text || "New item...", phone ? 17 : 20, array === tree.children ? 600 : 400);
 		return (
 			<li class={item.type}>
 				<textarea
@@ -155,7 +155,7 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 														{
 															text: "",
 															children: [],
-															type: "body"
+															type: `color-${Math.floor(Math.random() * 36) + 1}`
 														}
 													);
 													return returns;
@@ -178,7 +178,7 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 													returns.children.splice(index + 1, 0, {
 														text: "",
 														children: [],
-														type: e.shiftKey || item.type === "note" ? "note" : "body",
+														type: e.shiftKey || item.type === "note" ? "note" : `color-${Math.floor(Math.random() * 36) + 1}`,
 													});
 													return returns;
 												}
@@ -326,12 +326,12 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 			{fs.all[editing].children.map(map).map((tree, i) => (
 				<ul class={`list ${tree.props.class}`} key={i}>
 					{tree}
-					<li class="add" onMouseDown={prevent} onClick={add("body", i)}>
-						<Icon name="grid_view" style="round" role="button" />
+					<li class="add" onMouseDown={prevent}>
+						<Icon name="grid_view" style="round" role="button" onClick={add(`color-${Math.floor(Math.random() * 36) + 1}`, i)} />
 					</li>
 					<li />
-					<li class="add" onMouseDown={prevent} onClick={add("note", i)}>
-						<Icon name="description" style="round" role="button" />
+					<li class="add" onMouseDown={prevent}>
+						<Icon name="description" style="round" role="button" onClick={add("note", i)} />
 					</li>
 				</ul>
 			))}
@@ -348,7 +348,7 @@ declare namespace List {
 
 	export interface Item {
 		text: string;
-		type: "note" | `color-${number}` | "body" | "heading";
+		type: "note" | `color-${number}` | "heading";
 		children: Item[];
 		description?: string;
 		link?: string;

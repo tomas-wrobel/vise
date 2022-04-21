@@ -6,6 +6,7 @@ import Grid from "components/grid";
 import {Tree} from "utils/tree";
 import Icon from "components/icon";
 import Redirect from "utils/redirect";
+import render from "preact-render-to-string";
 import "./style.scss";
 
 const Editor: FunctionComponent<Editor.Props> = ({file}) => {
@@ -16,6 +17,18 @@ const Editor: FunctionComponent<Editor.Props> = ({file}) => {
 	if (!(editing in fs.all)) {
 		return <Redirect to="/" />;
 	}
+	const saveURL = URL.createObjectURL(
+		new Blob(
+			[render(
+				<FileSystemContext.Provider value={fs}>
+					<Grid editing={editing} readonly="standalone" />
+				</FileSystemContext.Provider>
+			)],
+			{
+				type: "image/svg+xml"
+			}
+		)
+	)
 	return (
 		<>
 			{h(map ? Grid : List, {editing, onZoomChange: setZoom, zoom})}
@@ -25,6 +38,11 @@ const Editor: FunctionComponent<Editor.Props> = ({file}) => {
 						<input type="checkbox" checked={map} onInput={e => setMap(e.currentTarget.checked)} />
 						<Icon style="round" name="" />
 					</label>
+				</button>
+				<button>
+					<a download="vise.svg" href={saveURL}>
+						<Icon name="save_alt" />
+					</a>
 				</button>
 				<button
 					onClick={() => {

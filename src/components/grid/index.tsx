@@ -14,11 +14,12 @@ import {Tree} from "utils/tree";
 import Layout from "utils/layout";
 import FileSystemContext from "../filesystem/context";
 import {useContext, useState} from "preact/hooks";
-import "./style.scss";
+import standaloneStylesheet from "!!raw-loader!sass-loader!./style.scss";
 import measure from "utils/wrapText";
 import ColorPicker from "components/colorpicker";
+import "./style.scss";
 
-const reduce = (prev: [number, number], current: Tree.Data): [number, number] => {
+const reduce = (prev: [number, number], current: import("utils/tree").Tree.Data): [number, number] => {
 	const [width, height] = current.children.reduce(reduce, prev);
 	return [
 		Math.max(width, current.x + current.width),
@@ -26,7 +27,7 @@ const reduce = (prev: [number, number], current: Tree.Data): [number, number] =>
 	];
 };
 
-const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
+const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly}) => {
 	const [picker, setPicker] = useState<Tree.Data | null>(null);
 	const fs = useContext(FileSystemContext);
 	const map = (tree: Tree.Data, i: number, array: Tree.Data[]) => {
@@ -34,7 +35,7 @@ const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
 		const nodes = tree.children.filter(body => body.type !== "note");
 		const {lines} = measure(tree.text);
 		return (
-			<g class={tree.type}>
+			<g class={tree.type} key={i}>
 				{/* arrows */}
 				{nodes.map((node) => {
 					const points = [
@@ -66,156 +67,167 @@ const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
 				})}
 				<g class="item">
 					<rect height={tree.height} width={tree.width} x={tree.x} y={tree.y} rx={6} />
-					<foreignObject
-						width={tree.width - 24}
+					{readonly ? <text 
 						x={tree.x + 12}
 						y={tree.y + 12}
-						height={19 * lines.length}
-						overflow="visible"
 					>
-						<textarea
-							value={lines.join("\n")}
-							placeholder="New item..."
-							onInput={e => {
+						{tree.text}
+					</text> : <>
+						<foreignObject
+							width={tree.width - 24}
+							x={tree.x + 12}
+							y={tree.y + 12}
+							height={19 * lines.length}
+							overflow="visible"
+						>
+							<textarea
+								value={lines.join("\n")}
+								placeholder="New item..."
+								onInput={e => {
+									fs.change(
+										index,
+										(key, current) => {
+											if (current === tree) {
+												return {
+													...tree,
+													text: e.currentTarget.value,
+												};
+											}
+
+											if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
+												return current;
+											}
+										}
+									);
+								}}
+							/>
+						</foreignObject>
+						<text
+							fill="#FFF"
+							role="hidden"
+							stroke="none"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+						>
+							invert_colors
+						</text>
+						<text
+							fill-opacity="0.5"
+							role="button"
+							stroke="none"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+							onClick={() => setPicker(picker === tree ? null : tree)}
+						>
+							invert_colors
+						</text>
+						<text
+							fill="#FFF"
+							stroke="none"
+							role="hidden"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+							dx={34}
+						>
+							add
+						</text>
+						<text
+							fill-opacity="0.5"
+							stroke="none"
+							role="button"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+							dx={34}
+							onClick={(e?: Event) => {
+								e?.preventDefault();
 								fs.change(
 									index,
-									(key, current) => {
-										if (current === tree) {
-											return {
-												...tree,
-												text: e.currentTarget.value,
-											};
-										}
-
+									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
-											return current;
+											if (value === tree) {
+												return {
+													...tree,
+													children: [...tree.children, {
+														text: "",
+														type: `color-${Math.floor(Math.random() * 36) + 1}`,
+														children: []
+													}]
+												};
+											}
+											return value;
 										}
 									}
 								);
 							}}
-						/>
-					</foreignObject>
-					<text
-						fill="#FFF"
-						role="hidden"
-						stroke="none"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-					>
-						invert_colors
-					</text>
-					<text
-						fill-opacity="0.5"
-						role="button"
-						stroke="none"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-						onClick={() => setPicker(picker === tree ? null : tree)}
-					>
-						invert_colors
-					</text>
-					<text
-						fill="#FFF"
-						stroke="none"
-						role="hidden"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-						dx={34}
-					>
-						add
-					</text>
-					<text
-						fill-opacity="0.5"
-						stroke="none"
-						role="button"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-						dx={34}
-						onClick={(e?: Event) => {
-							e?.preventDefault();
-							fs.change(
-								index,
-								(key, value) => {
-									if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
-										if (value === tree) {
-											return {
-												...tree,
-												children: [...tree.children, {
-													text: "",
-													type: "body",
-													children: []
-												}]
-											};
+						>
+							add
+						</text>
+						<text
+							fill="#FFF"
+							stroke="none"
+							role="hidden"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+							dx={68}
+						>
+							delete_forever
+						</text>
+						<text
+							fill-opacity="0.5"
+							stroke="none"
+							role="button"
+							x={tree.x + tree.width - 102}
+							y={tree.y + 14}
+							class="material-icons-round"
+							text-anchor="start"
+							dominant-baseline="hanging"
+							dx={68}
+							onClick={() => {
+								fs.change(
+									index,
+									(key, value) => {
+										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
+											if (value.children && value.children.includes(tree)) {
+												return {
+													...value,
+													children: array.filter(t => t !== tree)
+												};
+											}
+											return value;
 										}
-										return value;
-									}
-								}
-							);
-						}}
-					>
-						add
-					</text>
-					<text
-						fill="#FFF"
-						stroke="none"
-						role="hidden"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-						dx={68}
-					>
-						delete_forever
-					</text>
-					<text
-						fill-opacity="0.5"
-						stroke="none"
-						role="button"
-						x={tree.x + tree.width - 102}
-						y={tree.y + 14}
-						class="material-icons-round"
-						text-anchor="start"
-						dominant-baseline="hanging"
-						dx={68}
-						onClick={() => {
-							fs.change(
-								index,
-								(key, value) => {
-									if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
-										if (value.children && value.children.includes(tree)) {
-											return {
-												...value,
-												children: array.filter(t => t !== tree)
-											};
-										}
-										return value;
-									}
-								});
-						}}
-					>
-						delete_forever
-					</text>
+									});
+							}}
+						>
+							delete_forever
+						</text>
+					</>}
 					{notes.map((note, i) => {
-						const {lines} = measure(note.text, 16);
 						return <Fragment key={i}>
-							<foreignObject
+							{readonly ? <text
 								x={tree.x + 32}
-								y={tree.y + 43 + i * 19}
+								y={tree.y + 24 + (i + 1) * 19}
+							>
+								{note.text}
+							</text> : <foreignObject
+								x={tree.x + 32}
+								y={tree.y + 24 + (i + 1) * 19}
 								width={tree.width - 32}
-								height={lines.length * 18}
+								height={19}
 								style="transform: translateY(-0.25em);"
 							>
 								<textarea value={note.text} onInput={e => fs.change(
@@ -229,7 +241,7 @@ const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
 										}
 									}
 								)} placeholder="New item..." />
-							</foreignObject>
+							</foreignObject>}
 							<circle fill="#FFF" stroke="none" r={3} cx={tree.x + 20} cy={tree.y + 48 + i * 19} />
 						</Fragment>;
 					})}
@@ -240,8 +252,16 @@ const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
 	};
 	const layout = Layout.layout(fs.all[index]);
 	const [width, height] = reduce([0, 0], layout);
+	if (readonly) {
+		return (
+			<svg xmlns="http://www.w3.org/2000/svg" class="tree" viewBox={`0 0 ${width + 92} ${height + 92}`}>
+				{map(layout, 0, [layout])}
+				{readonly === "standalone" && <style>{standaloneStylesheet}</style>}
+			</svg>
+		);
+	}
 	return (
-		<div style={{width: (width + 318) * zoom, height: (height + 321 * zoom)}} class="wrapper">
+		<div style={{width: (width + 318) * zoom, height: (height + 321) * zoom}} class="wrapper">
 			<svg
 				class="tree"
 				viewBox={`0 0 ${(width + 318) / zoom} ${(height + 321) / zoom}`}
@@ -276,5 +296,11 @@ const Grid: FunctionComponent<List.Props> = ({zoom = 1, editing: index}) => {
 		</div>
 	);
 };
+
+declare namespace Grid {
+	export interface Props extends List.Props {
+		readonly?: "standalone" | true;
+	}
+}
 
 export default Grid;

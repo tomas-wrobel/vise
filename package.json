@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "vise",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"license": "MIT",
 	"scripts": {
 		"build": "preact build --no-prerender",
@@ -44,6 +44,7 @@
 	"dependencies": {
 		"material-icons": "^1.10.8",
 		"preact": "^10.3.1",
+		"preact-render-to-string": "^5.1.21",
 		"preact-router": "^3.2.1"
 	},
 	"devDependencies": {

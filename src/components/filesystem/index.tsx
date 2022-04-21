@@ -13,6 +13,9 @@ class FileSystem extends Component<{}, FileSystemContext> {
 			undoData[0][i] = JSON.parse(
 				JSON.stringify(undoData[0][i], replacer)
 			);
+			setTimeout(() => {
+				localStorage.setItem("vise.files", JSON.stringify(undoData[0]));
+			}, 100);
 			this.update({
 				undoData,
 				all: undoData[0]
@@ -43,29 +46,31 @@ class FileSystem extends Component<{}, FileSystemContext> {
 			});
 		},
 		add() {
-			this.update({
-				undoData: [
-					[
-						...this.undoData[0],
-						{
-							type: "heading",
-							children: [
-								{
-									text: "Heading",
-									children: [],
-									type: "color-1",
-								},
-								{
-									text: "Heading",
-									children: [],
-									type: "color-6",
-								},
-							],
-							text: "Editor",
-						},
-					],
-					...this.undoData,
+			const undoData = [
+				[
+					...this.undoData[0],
+					{
+						type: "heading",
+						children: [
+							{
+								text: "Heading",
+								children: [],
+								type: "color-1",
+							},
+							{
+								text: "Heading",
+								children: [],
+								type: "color-6",
+							},
+						],
+						text: "Editor",
+					},
 				],
+				...this.undoData,
+			];
+			this.update({
+				undoData,
+				all: undoData[0]
 			});
 		},
 		undoData: [(function(): List.Item[] {

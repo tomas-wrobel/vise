@@ -1,4 +1,4 @@
-import measure, {ctx} from "./measure";
+import measure from "./measure";
 
 export default function wrapText(text: string, fontSize = 17, weight = 400) {
 	const lines = text.replace(

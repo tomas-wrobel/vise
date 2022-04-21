@@ -1,18 +1,6 @@
-declare module "slipjs" {
-    class Slip {
-        constructor(element: HTMLElement);
-        detach(): void;
-    }
-
-    export default Slip;
+declare module "raw-loader!*" {
+    const bundled: string;
+    export = bundled;
 }
-
-declare module "*.css" {
-    const classes: Record<string, string>;
-    export = classes;
-}
-
-declare module "*.scss" {
-    const classes: Record<string, string>;
-    export = classes;
-}
+declare module "*.css";
+declare module "*.scss";

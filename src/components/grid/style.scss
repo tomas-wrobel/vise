@@ -8,6 +8,10 @@ div.wrapper {
 }
 
 svg.tree {
+	* {
+		stop-color: inherit;
+	}
+
 	@each $color in $colors {
 		.color-#{list.index($colors, $color)} {
 			fill: $color;
@@ -20,6 +24,12 @@ svg.tree {
 	.heading {
 		fill: $primary;
 		stop-color: color.change($primary, $alpha: 0.6);
+	}
+
+	text {
+		dominant-baseline: hanging;
+		fill: #FFF;
+		stroke: none;
 	}
 
 	foreignObject>textarea {
@@ -36,8 +46,7 @@ svg.tree {
 	}
 
 	.material-icons-round {
-		cursor: pointer;
-		user-select: text;
+		user-select: none;
 	}
 
 	[role="button"] {
