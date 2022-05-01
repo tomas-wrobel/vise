@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * 
  * @param {import("preact-cli").Config} config 
@@ -7,9 +8,9 @@
 export default function(config, env, helpers) {
 	config.resolve.modules.push(env.src);
 
-	for (const loader of helpers.getLoadersByName(config, "css-loader")) {
-		if (typeof loader !== "string" && loader.rule.options?.modules) {
-			loader.loader.options.modules = false;
+	for (const {loader} of helpers.getLoadersByName(config, "css-loader")) {
+		if (typeof loader !== "string" && "modules" in loader.options) {
+			loader.options.modules = false;
 		}
 	}
 }
