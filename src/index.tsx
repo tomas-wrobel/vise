@@ -7,6 +7,8 @@ import Home from "routes/home";
 import NotFoundPage from "routes/notfound";
 import Editor from "routes/editor";
 
+import "scss";
+
 const App: FunctionComponent = () => {
 	return (
 		<div id="root">

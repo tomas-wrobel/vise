@@ -1,6 +1,6 @@
 {
 	"recommendations": [
-		"pkief.material-icon-theme",
-		"sndst00m.vscode-native-svg-preview"
+		"dbaeumer.vscode-eslint",
+		"PKief.material-icon-theme"
 	]
 }

@@ -99,7 +99,11 @@ const ColorPicker: FunctionComponent<ColorPicker.Props> = ({onClose, ...props}) 
 				<button
 					style={{opacity: i === index ? 1 : 0.5}}
 					title={`Page ${i + 1}`}
-					onClick={() => setIndex(i)}
+					onClick={() => {
+						view.current!.children[i].scrollIntoView({
+							behavior: "smooth"
+						});
+					}}
 					key={i}
 				/>
 			))}

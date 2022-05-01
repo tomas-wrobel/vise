@@ -13,15 +13,15 @@ const Editor: FunctionComponent<Editor.Props> = ({file}) => {
 	const fs = useContext(FileSystemContext);
 	const [zoom, setZoom] = useState(1);
 	const [map, setMap] = useState(true);
-	const editing = +file;
-	if (!(editing in fs.all)) {
+	if (!(+file in fs.all)) {
 		return <Redirect to="/" />;
 	}
+	const tree = fs.all[+file];
 	const saveURL = URL.createObjectURL(
 		new Blob(
 			[render(
 				<FileSystemContext.Provider value={fs}>
-					<Grid editing={editing} readonly="standalone" />
+					<Grid tree={tree} readonly="standalone" />
 				</FileSystemContext.Provider>
 			)],
 			{
@@ -31,7 +31,7 @@ const Editor: FunctionComponent<Editor.Props> = ({file}) => {
 	)
 	return (
 		<>
-			{h(map ? Grid : List, {editing, onZoomChange: setZoom, zoom})}
+			{h(map ? Grid : List, {tree, onZoomChange: setZoom, zoom})}
 			<div class="vertical toolbar">
 				<button>
 					<label>

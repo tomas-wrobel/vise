@@ -30,12 +30,11 @@ function prevent(event: Event) {
 
 const observer = new MutationObserver(focus);
 
-const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
+const List: FunctionComponent<List.Props> = ({tree, zoom = 1}) => {
 	const active = useRef<List.Item | null>(null);
 	const fs = useContext(FileSystemContext);
 	const container = useRef<HTMLDivElement>(null);
 	const phone = useMediaQuery("(max-width: 640px)");
-	const tree = fs.all[editing];
 
 	useEffect(() => {
 		observer.observe(container.current!, {
@@ -47,7 +46,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 	});
 
 	const previousLevel = (item: List.Item) => fs.change(
-		editing,
 		(key, value: List.Item) => {
 			if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 				if (Array.isArray(value.children) && value.children.length && value.type !== "heading") {
@@ -83,7 +81,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 					onBlur={() => active.current = null}
 					tabIndex={-1}
 					onInput={e => fs.change(
-						editing,
 						(key, value) => {
 							if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 								if (value === item) {
@@ -103,7 +100,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 								previousLevel(item);
 							} else if (e.ctrlKey) {
 								fs.change(
-									editing,
 									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 											if (value === item) {
@@ -124,7 +120,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 							) {
 								if (tree.children === array || item.children.length || e.shiftKey) {
 									fs.change(
-										editing,
 										(key, value) => {
 											if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 												if (value === item) {
@@ -167,7 +162,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 
 								} else {
 									fs.change(
-										editing,
 										(key, value) => {
 											if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 												if (value.children === array) {
@@ -193,7 +187,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 						}
 						if (e.key === "Backspace" && !item.text) {
 							fs.change(
-								editing,
 								(key, value) => {
 									if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 										if (value.children === array) {
@@ -210,7 +203,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 							e.preventDefault();
 							if (!e.shiftKey) {
 								fs.change(
-									editing,
 									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 											if (value.children === array) {
@@ -259,7 +251,6 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 		}
 		const top = tree.children.includes(item) || !!item.children.length;
 		fs.change(
-			editing,
 			(key, value) => {
 				if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 					if (value === item && top) {
@@ -295,9 +286,9 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 			<h1>
 				<input
 					value={tree.text}
-					onInput={e => fs.change(editing, (key, value) => {
+					onInput={e => fs.change((key, value) => {
 						if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
-							if (value === fs.all[editing]) {
+							if (value === tree) {
 								return {
 									...value,
 									text: e.currentTarget.value
@@ -306,9 +297,9 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 							return value;
 						}
 					})}
-					onKeyUp={e => e.key === "Enter" && fs.change(editing, (key, value) => {
+					onKeyUp={e => e.key === "Enter" && fs.change((key, value) => {
 						if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
-							if (value === fs.all[editing]) {
+							if (value === tree) {
 								return {
 									...value,
 									children: [...value.children, {
@@ -323,17 +314,23 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 					})}
 				/>
 			</h1>
-			{fs.all[editing].children.map(map).map((tree, i) => (
-				<ul class={`list ${tree.props.class}`} key={i}>
-					{tree}
-					<li class="add" onMouseDown={prevent}>
-						<Icon name="grid_view" style="round" role="button" onClick={add(`color-${Math.floor(Math.random() * 36) + 1}`, i)} />
-					</li>
-					<li />
-					<li class="add" onMouseDown={prevent}>
-						<Icon name="description" style="round" role="button" onClick={add("note", i)} />
-					</li>
-				</ul>
+			{tree.children.map(map).map((tree, i) => (
+				<div class={`list ${tree.props.class}`} key={i}>
+					<ul>
+						{tree}
+					</ul>
+					{/* First layer */}
+					<div>
+						{/* Second layer */}
+						<div>
+							{/* Icon layout */}
+							<div>
+								<Icon name="note_add" onClick={add("note", i)} />
+								<Icon name="add_box" onClick={add(`color-${Math.floor(Math.random() * 36) + 1}`, i)} />
+							</div>
+						</div>
+					</div>
+				</div>
 			))}
 		</div>
 	);
@@ -342,7 +339,7 @@ const List: FunctionComponent<List.Props> = ({editing, zoom = 1}) => {
 declare namespace List {
 	export interface Props {
 		zoom?: number;
-		editing: number;
+		tree: List.Item;
 		onZoomChange?: (zoom: number) => void;
 	}
 

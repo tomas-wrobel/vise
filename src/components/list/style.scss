@@ -15,14 +15,12 @@ h1 {
 	}
 }
 
-ul.list {
+div.list {
 	border-radius: 10px;
-	padding: 12px;
-	margin-top: 10px !important;
-	font-family: -apple-system, Roboto, system-ui, sans-serif;
 	// phone
 	width: calc(100% - $toolbar - 8px);
 	margin-left: 8px;
+	padding: 1px;
 
 	@media (min-width: 640px) {
 		// tablet
@@ -36,54 +34,28 @@ ul.list {
 		width: 66.67%;
 	}
 
-	li textarea {
+	li > textarea {
 		all: inherit;
 		position: relative;
-	}
 
-	// Title
-	>li {
-		list-style-type: none;
-		font-size: 22px;
-
-		>textarea {
-			font-weight: 600;
+		&::placeholder {
+			color: inherit;
+			opacity: 60%;
 		}
 	}
 
-	li.add {
-		text-align: right;
+	> ul {
+		padding: 8px;
+		width: 100%;
 
-		>span {
-			cursor: pointer;
-			font-size: 32px;
-			padding: 4px;
+		// Title
+		> li {
+			list-style-type: none;
+			font-size: 22px;
 
-			color: white;
-			border-radius: 5px;
-
-			clip-path: polygon(0 0, calc(100% - 0.5em) 0, calc(100% - 0.5em) 100%, 0 100%);
-			transform: translate(0.5em);
-
-			@media (min-width: 640px) and (hover: none) {
-				font-size: 40px;
+			> textarea {
+				font-weight: 600;
 			}
-
-			&::after {
-				background: inherit;
-				border-radius: 50%;
-				color: inherit;
-				content: "add_circle";
-				font-size: .5em;
-				-webkit-transform: translate(-0.875em, 1.125em);
-				-ms-transform: translate(-.875em, 1.125em);
-				transform: translate(-1.5em, 1.125em);
-				float: right;
-			}
-		}
-
-		&+li {
-			height: 12px;
 		}
 	}
 
@@ -113,18 +85,36 @@ ul.list {
 			background: color.change($color, $alpha: 0.4);
 			color: $color;
 
-			li.add>span {
+			// First layer of the bottom
+			> div {
 				background: $color;
-
-				&:hover {
-					background: color.adjust($color, $lightness: -10%);
-				}
+				border-bottom-left-radius: 10px;
+				border-bottom-right-radius: 10px;
 			}
 		}
 	}
 
-	textarea::placeholder {
-		color: inherit;
-		opacity: 60%;
+	// Second layer of the bottom
+	> div > div {
+		background: rgba(255, 255, 255, 0.8);
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+
+		// Icon container
+		> div {
+			text-align: right;
+
+			// Icons
+			> span {
+				margin: 0 8px;
+				font-size: 36px;
+			}
+		}
 	}
+
+	margin-top: 10px !important;
+}
+
+ul {
+	padding-left: 20px;
 }

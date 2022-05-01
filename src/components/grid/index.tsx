@@ -27,7 +27,7 @@ const reduce = (prev: [number, number], current: import("utils/tree").Tree.Data)
 	];
 };
 
-const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly}) => {
+const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, tree, readonly}) => {
 	const [picker, setPicker] = useState<Tree.Data | null>(null);
 	const fs = useContext(FileSystemContext);
 	const map = (tree: Tree.Data, i: number, array: Tree.Data[]) => {
@@ -85,7 +85,6 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 								placeholder="New item..."
 								onInput={e => {
 									fs.change(
-										index,
 										(key, current) => {
 											if (current === tree) {
 												return {
@@ -153,7 +152,6 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 							onClick={(e?: Event) => {
 								e?.preventDefault();
 								fs.change(
-									index,
 									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 											if (value === tree) {
@@ -199,7 +197,6 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 							dx={68}
 							onClick={() => {
 								fs.change(
-									index,
 									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 											if (value.children && value.children.includes(tree)) {
@@ -231,7 +228,6 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 								style="transform: translateY(-0.25em);"
 							>
 								<textarea value={note.text} onInput={e => fs.change(
-									index,
 									(key, value) => {
 										if (key !== "width" && key !== "height" && key !== "x" && key !== "y") {
 											if (value === note) {
@@ -250,7 +246,7 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 			</g>
 		);
 	};
-	const layout = Layout.layout(fs.all[index]);
+	const layout = Layout.layout(tree);
 	const [width, height] = reduce([0, 0], layout);
 	if (readonly) {
 		return (
@@ -274,7 +270,6 @@ const Grid: FunctionComponent<Grid.Props> = ({zoom = 1, editing: index, readonly
 						<ColorPicker onClose={color => {
 							if (color) {
 								fs.change(
-									index,
 									(key, value) => {
 										if (value === picker) {
 											return {

@@ -3,7 +3,7 @@
  * @license MIT
  * @format
  *
- * Home is just file explorer
+ * Home is just a file explorer
  */
 import {FunctionComponent, h, Fragment} from "preact";
 import {useContext} from "preact/hooks";
@@ -18,8 +18,8 @@ const Home: FunctionComponent = () => {
 		<>
 			<main>
 				{fs.all.map((tree, i) => (
-					<a class="thumbnail" href={`/edit/${i}`} key={i}>
-						<Grid editing={i} readonly />
+					<a class="thumbnail" href={`/edit/${i}`} key={tree.text}>
+						<Grid tree={tree} readonly />
 						<div class="overlay">
 							<span class="name">{tree.text}</span>
 						</div>

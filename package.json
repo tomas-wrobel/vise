@@ -4,7 +4,7 @@
 	"version": "0.1.0",
 	"license": "MIT",
 	"scripts": {
-		"build": "preact build --no-prerender",
+		"build": "preact build",
 		"serve": "sirv build --port 8080 --cors --single",
 		"dev": "preact watch",
 		"lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
@@ -23,7 +23,8 @@
 			},
 			"ecmaVersion": 6,
 			"lib": [
-				"dom"
+				"dom",
+				"es6"
 			]
 		},
 		"env": {

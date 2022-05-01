@@ -65,7 +65,6 @@ div.color-picker {
 	scroll-snap-type: x mandatory;
 	flex: 1;
 	display: flex;
-	-webkit-overflow-scrolling: touch;
 	width: 100%;
 
 	section {
@@ -73,5 +72,12 @@ div.color-picker {
 		height: 100%;
 		flex: 0 0 100%;
 		scroll-snap-align: start;
+	}
+
+	-webkit-overflow-scrolling: touch;
+
+	&::-webkit-scrollbar {
+		@include square(0);
+		opacity: 0;
 	}
 }

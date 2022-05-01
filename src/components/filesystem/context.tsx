@@ -4,7 +4,7 @@ import type List from "../list";
 interface FileSystemContext {
 	undo(): void;
 	redo(): void;
-	change(index: number, replacer: (this: any, key: string, value: any) => any): void;
+	change(replacer: (this: any, key: string, value: any) => any): void;
 	delete(i: number): void;
 	add(): void;
 
